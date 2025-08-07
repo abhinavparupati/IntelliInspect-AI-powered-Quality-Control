@@ -43,7 +43,7 @@ IntelliInspect is a full-stack AI-powered application for real-time quality cont
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd intelliinspect
+cd IntelliInspect-AI-powered-Quality-Control
 ```
 
 2. Start the application:
