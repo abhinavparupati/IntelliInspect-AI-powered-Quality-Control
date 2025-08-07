@@ -1,0 +1,215 @@
+<div class="container">
+  <mat-stepper orientation="horizontal" [selectedIndex]="3">
+    <mat-step label="Upload Dataset" state="done">
+    </mat-step>
+    <mat-step label="Date Ranges" state="done">
+    </mat-step>
+    <mat-step label="Model Training" state="done">
+    </mat-step>
+    <mat-step label="Real-Time Simulation" state="edit">
+    </mat-step>
+  </mat-stepper>
+
+  <div class="content">
+    <h1>Step 4 of 4: Real-Time Prediction Simulation</h1>
+    <p>Simulate real-time model inference on production line data with live updates.</p>
+
+    <!-- Simulation Info -->
+    <mat-card class="info-card" *ngIf="simulationStatus.expectedCount || dateRanges || currentSimulationData">
+      <mat-card-content>
+        <div class="info-content">
+          <mat-icon color="primary">info</mat-icon>
+          <div>
+            <h4>Real Data Simulation</h4>
+            <p *ngIf="simulationStatus.expectedCount">
+              This simulation will process <strong>{{ simulationStatus.expectedCount }}</strong> real data records from your uploaded dataset.
+            </p>
+            <p *ngIf="dateRanges" class="date-range-info">
+              <strong>Simulation Period:</strong> 
+              {{ formatDate(dateRanges.simulation.start) }} to {{ formatDate(dateRanges.simulation.end) }}
+              ({{ calculateDaysBetween(dateRanges.simulation.start, dateRanges.simulation.end) }} days)
+            </p>
+            <div *ngIf="currentSimulationData" class="data-info">
+              <p><strong>Available Records:</strong> {{ currentSimulationData.totalRecords }} actual data rows in simulation period</p>
+              <p class="data-description">Each prediction uses real feature values from your dataset, providing authentic model performance evaluation.</p>
+            </div>
+            <p class="scope-explanation">
+              The model will make predictions on actual data that falls within your selected simulation date range.
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Control Panel -->
+    <mat-card class="control-panel">
+      <mat-card-content>
+        <div class="control-content">
+          <div class="simulation-controls">
+            <button mat-raised-button 
+                    color="primary" 
+                    [disabled]="simulationStatus.isRunning"
+                    (click)="startSimulation()">
+              <mat-icon>play_arrow</mat-icon>
+              Start Simulation
+            </button>
+            
+            <button mat-raised-button 
+                    color="warn" 
+                    [disabled]="!simulationStatus.isRunning"
+                    (click)="stopSimulation()">
+              <mat-icon>stop</mat-icon>
+              Stop Simulation
+            </button>
+          </div>
+          
+          <div class="simulation-status" [class.running]="simulationStatus.isRunning">
+            <mat-icon>{{ simulationStatus.isRunning ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+            <span>{{ simulationStatus.isRunning ? 'Simulation Running' : 'Simulation Stopped' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Live Statistics -->
+    <div class="stats-grid">
+      <mat-card class="stat-card total">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon>assessment</mat-icon>
+            <div>
+              <h3>Total Predictions</h3>
+              <p class="stat-value">
+                {{ simulationStatus.totalPredictions }}
+                <span *ngIf="simulationStatus.expectedCount" class="progress-text">
+                  / {{ simulationStatus.expectedCount }}
+                </span>
+              </p>
+              <div *ngIf="simulationStatus.expectedCount" class="progress-bar">
+                <div class="progress-fill" 
+                     [style.width.%]="(simulationStatus.totalPredictions / simulationStatus.expectedCount) * 100">
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card pass">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon>check_circle</mat-icon>
+            <div>
+              <h3>Pass Count</h3>
+              <p class="stat-value">{{ simulationStatus.passCount }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card fail">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon>cancel</mat-icon>
+            <div>
+              <h3>Fail Count</h3>
+              <p class="stat-value">{{ simulationStatus.failCount }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card confidence">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon>trending_up</mat-icon>
+            <div>
+              <h3>Avg Confidence</h3>
+              <p class="stat-value">{{ (simulationStatus.averageConfidence * 100) | number:'1.1-1' }}%</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Real-Time Charts -->
+    <div class="charts-row">
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Real-Time Quality Predictions</mat-card-title>
+          <mat-card-subtitle>Quality Score vs Date</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #qualityChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Prediction Confidence Distribution</mat-card-title>
+          <mat-card-subtitle>Pass/Fail Breakdown</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-container">
+            <canvas #confidenceChart></canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Live Predictions Table -->
+    <mat-card class="table-card">
+      <mat-card-header>
+        <mat-card-title>Live Predictions Stream</mat-card-title>
+        <mat-card-subtitle>Real-time prediction results</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="predictionsDataSource" class="predictions-table">
+            <ng-container matColumnDef="timestamp">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let prediction">{{ formatDate(prediction.timestamp) }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="sampleId">
+              <th mat-header-cell *matHeaderCellDef>Sample ID</th>
+              <td mat-cell *matCellDef="let prediction">{{ prediction.sampleId }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="prediction">
+              <th mat-header-cell *matHeaderCellDef>Prediction</th>
+              <td mat-cell *matCellDef="let prediction">
+                <span [class]="'prediction-' + prediction.prediction.toLowerCase()">
+                  {{ prediction.prediction }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="confidence">
+              <th mat-header-cell *matHeaderCellDef>Confidence</th>
+              <td mat-cell *matCellDef="let prediction">
+                <span [class]="getConfidenceClass(prediction.confidence)">
+                  {{ (prediction.confidence * 100) | number:'1.1-1' }}%
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="navigation-buttons">
+      <button mat-raised-button (click)="navigatePrevious()">Previous</button>
+      <button mat-raised-button 
+              color="primary" 
+              (click)="restartWorkflow()">
+        Start New Analysis
+      </button>
+    </div>
+  </div>
+</div>

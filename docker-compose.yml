@@ -1,0 +1,53 @@
+services:
+  frontend-angular:
+    build:
+      context: ./frontend-angular
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    environment:
+      - API_URL=http://backend-dotnet:5000
+    depends_on:
+      - backend-dotnet
+    networks:
+      - intelliinspect-network
+
+  backend-dotnet:
+    build:
+      context: ./backend-dotnet
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ML_SERVICE_URL=http://ml-service-python:8000
+      - ASPNETCORE_URLS=http://+:5000
+    depends_on:
+      - ml-service-python
+    volumes:
+      - ./shared-data:/app/data
+    networks:
+      - intelliinspect-network
+
+  ml-service-python:
+    build:
+      context: ./ml-service-python
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - MODEL_PATH=/app/models
+    volumes:
+      - ./shared-data:/app/data
+      - ./models:/app/models
+    networks:
+      - intelliinspect-network
+
+volumes:
+  shared-data:
+  models:
+
+networks:
+  intelliinspect-network:
+    driver: bridge

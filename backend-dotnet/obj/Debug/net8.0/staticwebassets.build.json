@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "BNhUgfBrrvYZFNmWlT2TqeRfokJOzp9WhUjG82+/lSk=",
+  "Source": "IntelliInspect.Api",
+  "BasePath": "_content/IntelliInspect.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
