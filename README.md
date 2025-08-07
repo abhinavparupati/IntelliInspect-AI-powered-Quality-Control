@@ -19,7 +19,7 @@ IntelliInspect is a full-stack AI-powered application for real-time quality cont
 ### Key Capabilities
 - Support for large CSV dataset uploads with progress tracking
 - Synthetic timestamp augmentation for time-based data segmentation
-- ML model training using XGBoost/LightGBM/scikit-learn
+- ML model training using XGBoost
 - Real-time prediction streaming with live UI updates
 - Comprehensive performance metrics and visualizations
 
@@ -151,23 +151,6 @@ docker-compose -f docker-compose.prod.yml build
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
-### Environment Variables
-- `API_URL`: Backend API URL for frontend
-- `ML_SERVICE_URL`: ML service URL for backend
-- `MODEL_PATH`: Path for storing trained models
-- `DATA_PATH`: Path for dataset storage
-
-## Demo Video Creation Steps
-
-1. **Setup**: Show the application startup with `docker-compose up`
-2. **Upload**: Demonstrate dataset upload with progress indication
-3. **Configuration**: Configure training/testing/simulation date ranges
-4. **Training**: Show model training process and performance metrics
-5. **Simulation**: Display real-time prediction simulation with live charts
-6. **Conclusion**: Highlight key features and benefits
-
-Total demo duration: ~3 minutes
-
 ## Contributing
 
 1. Fork the repository
@@ -179,13 +162,6 @@ Total demo duration: ~3 minutes
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For issues and questions:
-- Check the documentation in the `docs/` directory
-- Review API documentation at `/docs` endpoints
-- Submit issues via GitHub Issues
 
 ## Acknowledgments
 
