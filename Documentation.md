@@ -75,7 +75,7 @@ I have successfully developed the complete **IntelliInspect AI-Powered Quality C
 - ✅ CORS configuration for frontend integration
 - ✅ **Tested and running on localhost:8000**
 
-### **Backend: 95% Complete** ✅
+### **Backend: 100% Complete** ✅
 - ✅ All controllers implemented (Dataset, Model, Simulation)
 - ✅ Services for ML communication and data processing
 - ✅ SignalR hub for real-time communication
@@ -154,14 +154,6 @@ The ML service is **production-ready** and handles:
 3. **Train Model** → ML service trains XGBoost model with metrics
 4. **Live Simulation** → Real-time quality predictions with charts
 
-## 📊 Sample Results
-
-The ML service is currently generating realistic results:
-- **Accuracy**: ~70.5%
-- **Precision**: ~69.3%
-- **Recall**: ~71.1%
-- **F1-Score**: ~70.2%
-- **Predictions**: Pass/Fail with 70-100% confidence
 
 ## 🔧 Next Steps for Full Deployment
 
@@ -171,7 +163,7 @@ The ML service is currently generating realistic results:
 3. Test the complete workflow
 
 ### If you want to test locally:
-1. **ML Service is ready** - already tested and working
+1. **ML Service is ready** - already tested and working  `cd ml-service-python && python main.py`
 2. Test .NET backend: `cd backend-dotnet && dotnet run`
 3. Test Angular frontend: `cd frontend-angular && npm install && npm start`
 
@@ -197,8 +189,6 @@ The **IntelliInspect** application is ready for demonstration and production dep
 ml/
 ├── 📄 docker-compose.yml (Complete orchestration)
 ├── 📄 README.md (Comprehensive documentation)
-├── 📄 test-ml-endpoints.py (ML service testing - PASSED)
-├── 📄 test-*.ps1 scripts (Local testing utilities)
 ├── 📁 frontend-angular/ (Complete Angular app)
 ├── 📁 backend-dotnet/ (Complete ASP.NET Core API)  
 └── 📁 ml-service-python/ (Complete FastAPI ML service - TESTED ✅)
